@@ -1,8 +1,7 @@
-// +build grpcping
-
 package main
 
 import (
+	"crypto/x509"
 	"flag"
 	"fmt"
 	"io"
@@ -12,26 +11,34 @@ import (
 	pb "github.com/knative/docs/docs/serving/samples/grpc-ping-go/proto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 )
 
 var (
-	serverAddr         = flag.String("server_addr", "127.0.0.1:8080", "The server address in the format of host:port")
-	serverHostOverride = flag.String("server_host_override", "", "")
-	insecure           = flag.Bool("insecure", false, "Set to true to skip SSL validation")
+	server   = flag.String("server", "127.0.0.1", "The server hostname.")
+	insecure = flag.Bool("insecure", false, "Set to true to skip SSL validation")
 )
 
 func main() {
 	flag.Parse()
 
-	var opts []grpc.DialOption
-	if *serverHostOverride != "" {
-		opts = append(opts, grpc.WithAuthority(*serverHostOverride))
+	pool, err := x509.SystemCertPool()
+	if err != nil {
+		log.Fatalf("Unable to read system certificates")
 	}
+	creds := credentials.NewClientTLSFromCert(pool, "")
+
+	opts := []grpc.DialOption{}
+	var port int32
 	if *insecure {
 		opts = append(opts, grpc.WithInsecure())
+		port = 80
+	} else {
+		opts = append(opts, grpc.WithTransportCredentials(creds))
+		port = 443
 	}
 
-	conn, err := grpc.Dial(*serverAddr, opts...)
+	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", *server, port), opts...)
 	if err != nil {
 		log.Fatalf("fail to dial: %v", err)
 	}

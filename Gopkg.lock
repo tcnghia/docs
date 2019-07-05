@@ -432,6 +432,7 @@
     "golang.org/x/net/context",
     "golang.org/x/oauth2",
     "google.golang.org/grpc",
+    "google.golang.org/grpc/credentials",
     "gopkg.in/go-playground/webhooks.v3",
     "gopkg.in/go-playground/webhooks.v3/github",
     "gopkg.in/yaml.v2",
