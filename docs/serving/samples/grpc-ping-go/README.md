@@ -36,7 +36,7 @@ kubectl apply --filename docs/serving/samples/grpc-ping-go/sample.yaml
 
    ```shell
    # Put the ingress IP into an environment variable.
-   export GRPC_URL=$(basename $(kubectl get ksvc grpc-knative --output jsonpath="{.status.url}"))
+   export GRPC_URL=$(basename $(kubectl get ksvc knative-grpc --output jsonpath="{.status.url}"))
    ```
 
 1. Use the client to send message streams to the gRPC server
