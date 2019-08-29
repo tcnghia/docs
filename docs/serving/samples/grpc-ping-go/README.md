@@ -15,18 +15,16 @@ A simple gRPC server written in Go that you can use for testing.
 
 ## Build and run the gRPC server
 
-First, build and publish the gRPC server to DockerHub (replacing `{username}`):
+First, build and publish the gRPC server to DockerHub:
 
 ```shell
 # Build and publish the container, run from the root directory.
 docker build \
-  --tag "docker.io/{username}/grpc-ping-go" \
+  --tag "docker.io/tcnghia/grpc-ping-go" \
   --file=docs/serving/samples/grpc-ping-go/Dockerfile .
-docker push "docker.io/{username}/grpc-ping-go"
+docker push "docker.io/tcnghia/grpc-ping-go"
 ```
 
-Next, replace `{username}` in `sample.yaml` with your DockerHub username, and
-apply the yaml.
 
 ```shell
 kubectl apply --filename docs/serving/samples/grpc-ping-go/sample.yaml
@@ -41,11 +39,9 @@ kubectl apply --filename docs/serving/samples/grpc-ping-go/sample.yaml
    export GRPC_URL=$(basename $(kubectl get ksvc grpc-knative --output jsonpath="{.status.url}"))
    ```
 
-1. Use the client to send message streams to the gRPC server (replacing
-   `{username}`)
+1. Use the client to send message streams to the gRPC server
 
    ```shell
-   docker run -ti --entrypoint=/client docker.io/{username}/grpc-ping-go \
-     -server="${GRPC_URL}" \
-     -insecure
-   ```
+   docker run -ti --entrypoint=/client docker.io/tcnghia/grpc-ping-go \
+     -server="${GRPC_URL}"
+```

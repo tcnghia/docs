@@ -5,9 +5,17 @@ metadata:
 spec:
   template:
     metadata:
-      name: grpc-knative-00001
+      name: grpc-knative-00002
     spec:
       containers:
       - image: docker.io/tcnghia/grpc-ping-go
+        args: ["--value=KNATIVE"]
         ports:
           - name: h2c
+  traffic:
+  - revisionName: grpc-knative-00001
+    percent: 0
+    tag: blue
+  - revisionName: grpc-knative-00002
+    percent: 100
+    tag: green
